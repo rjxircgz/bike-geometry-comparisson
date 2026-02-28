@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bike Geometry Comparison</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  /* Bike input cards */
+  #bikes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .bike-card {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    padding: 16px;
+    width: 340px;
+    position: relative;
+  }
+
+  .bike-card .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .bike-card .remove-btn:hover { color: #e74c3c; }
+
+  .bike-card label {
+    display: block;
+    font-size: 0.75rem;
+    color: #8899aa;
+    margin-bottom: 2px;
+    margin-top: 10px;
+  }
+  .bike-card label:first-of-type { margin-top: 0; }
+
+  .bike-card input[type="text"],
+  .bike-card input[type="number"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #0f3460;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+  }
+  .bike-card input:focus {
+    outline: none;
+    border-color: #e94560;
+  }
+
+  .name-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .name-row input[type="text"] { flex: 1; }
+  .name-row input[type="color"] {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+  }
+
+  .preset-search {
+    position: relative;
+    margin-top: 8px;
+  }
+  .preset-search input {
+    width: 100%;
+    padding: 6px 28px 6px 8px;
+    border: 1px solid #0f3460;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-size: 0.85rem;
+  }
+  .preset-search input::placeholder { color: #556; }
+  .preset-search input:focus { outline: none; border-color: #e94560; }
+  .preset-search .chevron {
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #8899aa;
+    font-size: 0.6rem;
+  }
+  .preset-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 0 0 5px 5px;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .preset-search.open .preset-dropdown { display: block; }
+  .preset-search.open input { border-radius: 5px 5px 0 0; }
+  .preset-dropdown .cat-label {
+    padding: 6px 8px 2px;
+    font-size: 0.7rem;
+    color: #e94560;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .preset-dropdown .preset-option {
+    padding: 5px 8px 5px 14px;
+    font-size: 0.82rem;
+    color: #ccc;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .preset-dropdown .preset-option:hover,
+  .preset-dropdown .preset-option.active {
+    background: #0f3460;
+    color: #fff;
+  }
+  .preset-dropdown .preset-option .meta {
+    color: #667;
+    font-size: 0.75rem;
+    margin-left: 4px;
+  }
+  .preset-dropdown .no-results {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    color: #556;
+    text-align: center;
+  }
+
+  .params-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
+  }
+  .param-group { display: flex; flex-direction: column; }
+
+  .param-pair-label {
+    font-size: 0.75rem;
+    color: #e94560;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    font-weight: 600;
+  }
+  .param-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 0 12px;
+  }
+
+  #add-bike-btn {
+    display: block;
+    margin: 0 auto 32px;
+    padding: 10px 28px;
+    background: #e94560;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  #add-bike-btn:hover { background: #c73750; }
+  #add-bike-btn:disabled { background: #555; cursor: not-allowed; }
+
+  /* SVG diagram */
+  #diagram-section {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  #diagram-section h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #8899aa;
+    font-weight: 500;
+  }
+  #bike-svg {
+    width: 100%;
+    height: 500px;
+    display: block;
+  }
+
+  /* Legend */
+  .svg-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .svg-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+  }
+  .legend-measure {
+    font-size: 0.75rem;
+    color: #8899aa;
+    margin-left: 2px;
+    font-style: italic;
+  }
+  .svg-legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+
+  /* Comparison table */
+  #table-section {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    padding: 16px;
+    overflow-x: auto;
+  }
+  #table-section h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #8899aa;
+    font-weight: 500;
+  }
+
+  #comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  #comparison-table th,
+  #comparison-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid #0f3460;
+  }
+  #comparison-table th {
+    color: #8899aa;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+  #comparison-table td:first-child {
+    text-align: left;
+    color: #aaa;
+    font-weight: 500;
+  }
+  #comparison-table tr:last-child td { border-bottom: none; }
+
+  .cell-min { color: #3498db; font-weight: 700; }
+  .cell-max { color: #e94560; font-weight: 700; }
+  .delta-cell { color: #888; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<h1>Bike Geometry Comparison</h1>
+
+<div id="bikes-container"></div>
+<button id="add-bike-btn">+ Add Bike</button>
+
+<div id="diagram-section">
+  <h2>Geometry Overlay</h2>
+  <svg id="bike-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div id="svg-legend" class="svg-legend"></div>
+</div>
+
+<div id="table-section">
+  <h2>Comparison Table</h2>
+  <table id="comparison-table"></table>
+</div>
+
+<script>
+const PRESETS = [
+  // Trail
+  { category: 'Trail', name: 'Santa Cruz Hightower', year: 2024, size: 'L', hta: 65.5, sta: 76.5, reach: 480, stack: 624, topTube: 631, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Ibis Ripmo V2',        year: 2024, size: 'L', hta: 65.5, sta: 77,   reach: 475, stack: 625, topTube: 625, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Yeti SB140',           year: 2024, size: 'L', hta: 65.5, sta: 77.1, reach: 475, stack: 618, topTube: 622, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Trek Fuel EX',         year: 2024, size: 'L', hta: 65.5, sta: 76,   reach: 470, stack: 621, topTube: 620, stemAngle: -6, stemLength: 50 },
+  // Enduro
+  { category: 'Enduro', name: 'Specialized Enduro',    year: 2024, size: 'S3', hta: 63.5, sta: 77.5, reach: 475, stack: 623, topTube: 625, stemAngle: -6, stemLength: 42 },
+  { category: 'Enduro', name: 'Santa Cruz Megatower',  year: 2024, size: 'L',  hta: 63.8, sta: 77,   reach: 480, stack: 627, topTube: 630, stemAngle: -6, stemLength: 42 },
+  { category: 'Enduro', name: 'Canyon Strive',         year: 2024, size: 'L',  hta: 64,   sta: 77,   reach: 470, stack: 625, topTube: 620, stemAngle: -6, stemLength: 50 },
+  // XC
+  { category: 'XC', name: 'Scott Spark',             year: 2024, size: 'L',  hta: 68,   sta: 75,   reach: 460, stack: 610, topTube: 618, stemAngle: -6, stemLength: 75 },
+  { category: 'XC', name: 'Specialized Epic',        year: 2024, size: 'L',  hta: 67.5, sta: 75.2, reach: 450, stack: 605, topTube: 610, stemAngle: -6, stemLength: 80 },
+  { category: 'XC', name: 'Specialized Epic HT',     year: 2020, size: 'M',  hta: 68.5, sta: 74,   reach: 430, stack: 608, topTube: 604, stemAngle: 6,  stemLength: 70 },
+  { category: 'XC', name: 'Merida Big Nine 100',     year: 2021, size: 'L',  hta: 68,   sta: 71,   reach: 453, stack: 628, topTube: 682, stemAngle: -6, stemLength: 90 },
+  { category: 'XC', name: 'Canyon Lux',              year: 2024, size: 'L',  hta: 68,   sta: 74.5, reach: 455, stack: 608, topTube: 612, stemAngle: -6, stemLength: 75 },
+  // Road
+  { category: 'Road', name: 'Specialized Tarmac',  year: 2024, size: '56', hta: 73.5, sta: 73.5, reach: 396, stack: 573, topTube: 565, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Aeroad',       year: 2024, size: 'M',  hta: 73.5, sta: 73.5, reach: 389, stack: 565, topTube: 560, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Trek Madone',         year: 2024, size: '56', hta: 73.2, sta: 73.7, reach: 391, stack: 570, topTube: 562, stemAngle: -6, stemLength: 110 },
+  // Gravel
+  { category: 'Gravel', name: 'Specialized Diverge', year: 2024, size: '56', hta: 72,   sta: 73,   reach: 390, stack: 590, topTube: 570, stemAngle: -6, stemLength: 90 },
+  { category: 'Gravel', name: 'Canyon Grail',        year: 2024, size: 'M',  hta: 72.5, sta: 73.5, reach: 385, stack: 585, topTube: 565, stemAngle: -6, stemLength: 90 },
+  { category: 'Gravel', name: 'Trek Checkpoint',     year: 2024, size: '56', hta: 71.5, sta: 73,   reach: 388, stack: 594, topTube: 568, stemAngle: -6, stemLength: 90 },
+];
+
+const DEFAULTS = [
+  { name: 'Trail Bike', color: '#e94560', hta: 65, sta: 76, reach: 475, stack: 625, topTube: 625, stemAngle: -6, stemLength: 50, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+  { name: 'XC Bike',    color: '#3498db', hta: 69, sta: 73, reach: 440, stack: 600, topTube: 600, stemAngle: -6, stemLength: 90, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+];
+
+const PARAM_DEFS = [
+  { key: 'hta',              label: 'Head Tube Angle',   unit: '°',  min: 55,  max: 80,  step: 0.1 },
+  { key: 'sta',              label: 'Seat Tube Angle',   unit: '°',  min: 65,  max: 80,  step: 0.1 },
+  { key: 'reach',            label: 'Reach',             unit: 'mm', min: 350, max: 550, step: 1 },
+  { key: 'stack',            label: 'Stack',             unit: 'mm', min: 500, max: 700, step: 1 },
+  { key: 'topTube',          label: 'Top Tube (ETT)',    unit: 'mm', min: 500, max: 700, step: 1 },
+  { key: 'stemAngle',        label: 'Angle',              unit: '°',  min: -35, max: 35,  step: 1,  group: 'Stem' },
+  { key: 'stemLength',       label: 'Length',             unit: 'mm', min: 30,  max: 150, step: 1,  group: 'Stem' },
+  { key: 'stemSpacers',      label: 'Spacers',            unit: 'mm', min: 0,   max: 60,  step: 1,  group: 'Stem' },
+  { key: 'seatpostHeight',   label: 'Seatpost Height',   unit: 'mm', min: 0,   max: 300, step: 1,  group: 'Seatpost' },
+  { key: 'seatpostSetback',  label: 'Seatpost Setback',  unit: 'mm', min: 0,   max: 50,  step: 1,  group: 'Seatpost' },
+];
+
+let bikes = [];
+let nextId = 0;
+
+function addBike(preset) {
+  const d = preset || {
+    name: 'Bike ' + (bikes.length + 1),
+    color: ['#e94560','#3498db','#2ecc71','#f39c12'][bikes.length % 4],
+    hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20,
+  };
+  bikes.push({ id: nextId++, ...d });
+  render();
+}
+
+function removeBike(id) {
+  bikes = bikes.filter(b => b.id !== id);
+  render();
+}
+
+function render() {
+  renderCards();
+  renderSVG();
+  renderTable();
+  document.getElementById('add-bike-btn').disabled = bikes.length >= 4;
+}
+
+/* ── Cards ── */
+function renderCards() {
+  const container = document.getElementById('bikes-container');
+  container.innerHTML = '';
+  bikes.forEach(bike => {
+    const card = document.createElement('div');
+    card.className = 'bike-card';
+    card.style.borderTopColor = bike.color;
+    card.style.borderTop = `3px solid ${bike.color}`;
+
+    let html = `<button class="remove-btn" data-id="${bike.id}">&times;</button>`;
+    html += `<div class="name-row">
+      <input type="text" value="${bike.name}" data-id="${bike.id}" data-field="name">
+      <input type="color" value="${bike.color}" data-id="${bike.id}" data-field="color">
+    </div>`;
+    // Searchable preset dropdown
+    html += `<div class="preset-search" data-id="${bike.id}">`;
+    html += `<input type="text" class="preset-input" placeholder="Search presets\u2026" autocomplete="off">`;
+    html += `<span class="chevron">\u25BC</span>`;
+    html += `<div class="preset-dropdown"></div>`;
+    html += `</div>`;
+
+    // Ungrouped params in a 2-col grid
+    const ungrouped = PARAM_DEFS.filter(p => !p.group);
+    html += `<div class="params-grid">`;
+    ungrouped.forEach(p => {
+      html += `<div class="param-group">
+        <label>${p.label} (${p.unit})</label>
+        <input type="number" value="${bike[p.key]}" min="${p.min}" max="${p.max}" step="${p.step}"
+               data-id="${bike.id}" data-field="${p.key}">
+      </div>`;
+    });
+    html += `</div>`;
+
+    // Grouped params as labeled side-by-side pairs
+    const groups = [...new Set(PARAM_DEFS.filter(p => p.group).map(p => p.group))];
+    groups.forEach(g => {
+      const items = PARAM_DEFS.filter(p => p.group === g);
+      html += `<div class="param-pair-label">${g}</div>`;
+      html += `<div class="param-pair">`;
+      items.forEach(p => {
+        html += `<div class="param-group">
+          <label>${p.label} (${p.unit})</label>
+          <input type="number" value="${bike[p.key]}" min="${p.min}" max="${p.max}" step="${p.step}"
+                 data-id="${bike.id}" data-field="${p.key}">
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+
+  // Searchable preset dropdowns
+  container.querySelectorAll('.preset-search').forEach(wrapper => {
+    const input = wrapper.querySelector('.preset-input');
+    const dropdown = wrapper.querySelector('.preset-dropdown');
+    const bikeId = Number(wrapper.dataset.id);
+
+    function buildList(filter) {
+      const q = (filter || '').toLowerCase();
+      const categories = [...new Set(PRESETS.map(p => p.category))];
+      let html = '';
+      let anyMatch = false;
+      categories.forEach(cat => {
+        const items = PRESETS.map((p, i) => ({ ...p, idx: i }))
+          .filter(p => p.category === cat)
+          .filter(p => !q || p.name.toLowerCase().includes(q)
+            || p.category.toLowerCase().includes(q)
+            || String(p.year).includes(q)
+            || p.size.toLowerCase().includes(q));
+        if (items.length === 0) return;
+        anyMatch = true;
+        html += `<div class="cat-label">${cat}</div>`;
+        items.forEach(p => {
+          html += `<div class="preset-option" data-idx="${p.idx}">${p.name} <span class="meta">${p.year} ${p.size}</span></div>`;
+        });
+      });
+      if (!anyMatch) html = '<div class="no-results">No bikes found</div>';
+      dropdown.innerHTML = html;
+    }
+
+    function open() {
+      buildList(input.value);
+      wrapper.classList.add('open');
+    }
+    function close() {
+      setTimeout(() => wrapper.classList.remove('open'), 150);
+    }
+
+    input.addEventListener('focus', open);
+    input.addEventListener('blur', close);
+    input.addEventListener('input', () => {
+      buildList(input.value);
+      wrapper.classList.add('open');
+    });
+
+    dropdown.addEventListener('mousedown', (e) => {
+      const opt = e.target.closest('.preset-option');
+      if (!opt) return;
+      e.preventDefault();
+      const preset = PRESETS[Number(opt.dataset.idx)];
+      const bike = bikes.find(b => b.id === bikeId);
+      if (!bike) return;
+      bike.name = preset.name;
+      PARAM_DEFS.forEach(p => { if (preset[p.key] != null) bike[p.key] = preset[p.key]; });
+      render();
+    });
+  });
+
+  // Event delegation
+  container.querySelectorAll('.remove-btn').forEach(btn =>
+    btn.addEventListener('click', () => removeBike(Number(btn.dataset.id)))
+  );
+  container.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const bike = bikes.find(b => b.id === Number(inp.dataset.id));
+      if (!bike) return;
+      const field = inp.dataset.field;
+      if (field === 'name') bike.name = inp.value;
+      else if (field === 'color') bike.color = inp.value;
+      else bike[field] = parseFloat(inp.value) || 0;
+      renderSVG();
+      renderTable();
+      // Update card border color live
+      if (field === 'color') inp.closest('.bike-card').style.borderTop = `3px solid ${bike.color}`;
+    });
+  });
+}
+
+/* ── SVG Rendering ── */
+function deg(a) { return a * Math.PI / 180; }
+
+function computeBikePoints(bike) {
+  // BB is origin (0,0). Y-axis points up in our coordinate system.
+  const bb = { x: 0, y: 0 };
+
+  // Head tube top is defined by reach/stack from BB.
+  const htTop = { x: bike.reach, y: bike.stack };
+
+  // Head tube extends downward from htTop at head tube angle.
+  // HTA is measured from horizontal. The tube goes down-and-forward.
+  const htLength = 120; // approximate visual head tube length
+  const htaRad = deg(bike.hta);
+  const htBottom = {
+    x: htTop.x + htLength * Math.cos(htaRad),
+    y: htTop.y - htLength * Math.sin(htaRad),
+  };
+
+  // Seat tube extends upward from BB at seat tube angle.
+  const stLength = 500; // approximate visual seat tube length
+  const staRad = deg(bike.sta);
+  const stTop = {
+    x: bb.x - stLength * Math.cos(staRad),
+    y: bb.y + stLength * Math.sin(staRad),
+  };
+
+  // Seatpost extends above seat tube top along the same angle
+  const spHeight = bike.seatpostHeight || 0;
+  const spSetback = bike.seatpostSetback || 0;
+  const seatpostTop = {
+    x: stTop.x - spHeight * Math.cos(staRad),
+    y: stTop.y + spHeight * Math.sin(staRad),
+  };
+  // Saddle position: offset backward (horizontally) by setback
+  const saddle = {
+    x: seatpostTop.x - spSetback,
+    y: seatpostTop.y,
+  };
+
+  // Spacers raise the stem origin along the steerer tube (up and back)
+  const spacers = bike.stemSpacers || 0;
+  const stemOrigin = {
+    x: htTop.x - spacers * Math.cos(htaRad),
+    y: htTop.y + spacers * Math.sin(htaRad),
+  };
+
+  // Stem extends from stem origin.
+  const stemRad = deg(bike.stemAngle);
+  const stemEnd = {
+    x: stemOrigin.x + bike.stemLength * Math.cos(stemRad),
+    y: stemOrigin.y + bike.stemLength * Math.sin(stemRad),
+  };
+
+  // Wheels — approximate positions
+  const wheelRadius = 340; // ~700c wheel radius in mm at scale
+
+  // Rear wheel: directly below BB offset back (chainstay ~430mm)
+  const chainstay = 430;
+  const rearAxle = { x: bb.x - chainstay, y: bb.y };
+
+  // Front axle: derived from head tube bottom extending down to ground level.
+  // Fork length roughly gets the axle below the head tube bottom.
+  const forkLength = 520;
+  const frontAxle = {
+    x: htBottom.x + forkLength * Math.cos(htaRad),
+    y: htBottom.y - forkLength * Math.sin(htaRad),
+  };
+
+  // Down tube: BB to head tube bottom
+  // Top tube: seat tube area to head tube top area
+  // We connect top tube from a point on the seat tube at roughly head tube top height
+  const ttSeatJoin = {
+    x: bb.x - ((htTop.y - 30) / Math.tan(staRad)),
+    y: htTop.y - 30,
+  };
+
+  return { bb, htTop, htBottom, stTop, seatpostTop, saddle, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius };
+}
+
+function renderSVG() {
+  const svg = document.getElementById('bike-svg');
+  const legend = document.getElementById('svg-legend');
+  svg.innerHTML = '';
+  legend.innerHTML = '';
+
+  if (bikes.length === 0) {
+    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#555" font-size="16">Add bikes to see the geometry overlay</text>';
+    return;
+  }
+
+  // Compute all points to determine viewBox
+  const allBikePoints = bikes.map(b => ({ bike: b, pts: computeBikePoints(b) }));
+
+  // Gather all x,y coords to calculate bounds
+  let allX = [], allY = [];
+  allBikePoints.forEach(({ pts }) => {
+    const coords = [pts.bb, pts.htTop, pts.htBottom, pts.stTop, pts.seatpostTop, pts.saddle, pts.stemOrigin, pts.stemEnd, pts.rearAxle, pts.frontAxle, pts.ttSeatJoin];
+    coords.forEach(c => { allX.push(c.x); allY.push(c.y); });
+    // Wheel edges
+    allX.push(pts.rearAxle.x - pts.wheelRadius, pts.rearAxle.x + pts.wheelRadius);
+    allX.push(pts.frontAxle.x - pts.wheelRadius, pts.frontAxle.x + pts.wheelRadius);
+    allY.push(pts.rearAxle.y - pts.wheelRadius, pts.rearAxle.y + pts.wheelRadius);
+    allY.push(pts.frontAxle.y - pts.wheelRadius, pts.frontAxle.y + pts.wheelRadius);
+  });
+
+  const minX = Math.min(...allX) - 60;
+  const maxX = Math.max(...allX) + 60;
+  const minY = Math.min(...allY) - 60;
+  const maxY = Math.max(...allY) + 60;
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  // Flip Y: SVG y goes down, our coordinates y goes up.
+  // We'll transform: svgY = maxY - y + minY ... simpler: use a group with scale(1,-1)
+  svg.setAttribute('viewBox', `${minX} ${-maxY} ${width} ${height}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  // Grid / ground reference
+  const groundY = 0; // BB height is 0, ground is roughly at -(wheelRadius - BB drop)
+  // Draw a subtle ground line at the lowest wheel point
+  const groundLevel = Math.min(...allBikePoints.map(({ pts }) =>
+    Math.min(pts.rearAxle.y - pts.wheelRadius, pts.frontAxle.y - pts.wheelRadius)
+  ));
+
+  const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  gridGroup.setAttribute('transform', 'scale(1,-1)');
+  const groundLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  groundLine.setAttribute('x1', minX);
+  groundLine.setAttribute('x2', maxX);
+  groundLine.setAttribute('y1', -groundLevel);
+  groundLine.setAttribute('y2', -groundLevel);
+  groundLine.setAttribute('stroke', '#0f3460');
+  groundLine.setAttribute('stroke-width', '1');
+  groundLine.setAttribute('stroke-dasharray', '8,4');
+  gridGroup.appendChild(groundLine);
+  svg.appendChild(gridGroup);
+
+  // Draw each bike
+  allBikePoints.forEach(({ bike, pts }) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('transform', 'scale(1,-1)');
+
+    const color = bike.color;
+    const sw = 2.5;
+
+    function line(a, b, width, dash) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      el.setAttribute('x1', a.x); el.setAttribute('y1', a.y);
+      el.setAttribute('x2', b.x); el.setAttribute('y2', b.y);
+      el.setAttribute('stroke', color);
+      el.setAttribute('stroke-width', width || sw);
+      el.setAttribute('stroke-linecap', 'round');
+      if (dash) el.setAttribute('stroke-dasharray', dash);
+      g.appendChild(el);
+    }
+
+    function measureLine(a, b, label, offset) {
+      // Dashed line
+      line(a, b, 1.5, '8,5');
+      // Label at midpoint with background pill
+      const mx = (a.x + b.x) / 2 + (offset || 0);
+      const my = -((a.y + b.y) / 2); // counter group scale(1,-1)
+
+      // Background pill
+      const padX = 8, padY = 4, fontSize = 16;
+      const estW = label.length * fontSize * 0.55;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', mx - estW / 2 - padX);
+      rect.setAttribute('y', my - fontSize / 2 - padY);
+      rect.setAttribute('width', estW + padX * 2);
+      rect.setAttribute('height', fontSize + padY * 2);
+      rect.setAttribute('rx', 6);
+      rect.setAttribute('fill', '#16213e');
+      rect.setAttribute('stroke', color);
+      rect.setAttribute('stroke-width', 1);
+      rect.setAttribute('opacity', '0.95');
+      svg.appendChild(rect);
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', mx);
+      txt.setAttribute('y', my);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('dominant-baseline', 'central');
+      txt.setAttribute('fill', color);
+      txt.setAttribute('font-size', fontSize);
+      txt.setAttribute('font-weight', '600');
+      txt.setAttribute('font-family', 'inherit');
+      txt.textContent = label;
+      svg.appendChild(txt);
+    }
+
+    function circle(c, r, fill) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      el.setAttribute('cx', c.x); el.setAttribute('cy', c.y);
+      el.setAttribute('r', r);
+      el.setAttribute('stroke', color);
+      el.setAttribute('stroke-width', fill ? 0 : sw);
+      el.setAttribute('fill', fill || 'none');
+      g.appendChild(el);
+    }
+
+    // Wheels
+    circle(pts.rearAxle, pts.wheelRadius);
+    circle(pts.frontAxle, pts.wheelRadius);
+
+    // Hub dots
+    circle(pts.rearAxle, 6, color);
+    circle(pts.frontAxle, 6, color);
+
+    // BB dot
+    circle(pts.bb, 8, color);
+
+    // Seat tube
+    line(pts.bb, pts.stTop, 3);
+
+    // Seatpost
+    line(pts.stTop, pts.seatpostTop, 2);
+
+    // Saddle rails
+    const saddleHalf = 40;
+    line(
+      { x: pts.saddle.x - saddleHalf, y: pts.saddle.y },
+      { x: pts.saddle.x + saddleHalf, y: pts.saddle.y },
+      3
+    );
+
+    // Head tube
+    line(pts.htTop, pts.htBottom, 4);
+
+    // Down tube (BB to head tube bottom)
+    line(pts.bb, pts.htBottom, 3);
+
+    // Top tube (seat area to head tube top)
+    line(pts.ttSeatJoin, pts.htTop, 3);
+
+    // Chainstay (BB to rear axle)
+    line(pts.bb, pts.rearAxle, 2);
+
+    // Fork (head tube bottom to front axle)
+    line(pts.htBottom, pts.frontAxle, 2.5);
+
+    // Seatstay (seat tube top area to rear axle)
+    const seatstayTop = {
+      x: pts.bb.x - (380 * Math.cos(deg(bike.sta))),
+      y: pts.bb.y + (380 * Math.sin(deg(bike.sta))),
+    };
+    line(seatstayTop, pts.rearAxle, 2);
+
+    // Steerer tube / spacers (htTop to stemOrigin)
+    line(pts.htTop, pts.stemOrigin, 2);
+
+    // Stem
+    line(pts.stemOrigin, pts.stemEnd, 3.5);
+
+    // Handlebar — small T at end of stem
+    const barHalf = 30;
+    const stemPerp = deg(bike.stemAngle + 90);
+    const barEnd1 = {
+      x: pts.stemEnd.x + barHalf * Math.cos(stemPerp),
+      y: pts.stemEnd.y + barHalf * Math.sin(stemPerp),
+    };
+    const barEnd2 = {
+      x: pts.stemEnd.x - barHalf * Math.cos(stemPerp),
+      y: pts.stemEnd.y - barHalf * Math.sin(stemPerp),
+    };
+    line(barEnd1, barEnd2, 3);
+
+    // Measurement: saddle to handlebar (stem clamp)
+    const dx = pts.saddle.x - pts.stemEnd.x;
+    const dy = pts.saddle.y - pts.stemEnd.y;
+    const dist = Math.round(Math.sqrt(dx * dx + dy * dy));
+    measureLine(pts.saddle, pts.stemEnd, `Saddle–Bar: ${dist}mm`, 20);
+
+    svg.appendChild(g);
+
+    // Legend
+    const item = document.createElement('div');
+    item.className = 'svg-legend-item';
+    item.innerHTML = `<div class="svg-legend-swatch" style="background:${bike.color}"></div><span>${bike.name}</span><span class="legend-measure">${dist}mm saddle–bar</span>`;
+    legend.appendChild(item);
+  });
+}
+
+/* ── Comparison Table ── */
+function renderTable() {
+  const table = document.getElementById('comparison-table');
+  if (bikes.length === 0) {
+    table.innerHTML = '<tr><td style="color:#555;padding:20px;">Add bikes to see the comparison table</td></tr>';
+    return;
+  }
+
+  let html = '<thead><tr><th>Parameter</th>';
+  bikes.forEach(b => {
+    html += `<th style="color:${b.color}">${b.name}</th>`;
+  });
+  if (bikes.length === 2) html += '<th>Delta</th>';
+  html += '</tr></thead><tbody>';
+
+  PARAM_DEFS.forEach(p => {
+    const values = bikes.map(b => b[p.key]);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const allSame = min === max;
+
+    html += `<tr><td>${p.label} (${p.unit})</td>`;
+    values.forEach(v => {
+      let cls = '';
+      if (!allSame && bikes.length > 1) {
+        if (v === min) cls = 'cell-min';
+        else if (v === max) cls = 'cell-max';
+      }
+      html += `<td class="${cls}">${v}</td>`;
+    });
+    if (bikes.length === 2) {
+      const delta = values[1] - values[0];
+      const sign = delta > 0 ? '+' : '';
+      html += `<td class="delta-cell">${sign}${delta.toFixed(1)}</td>`;
+    }
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+/* ── Init ── */
+document.getElementById('add-bike-btn').addEventListener('click', () => addBike());
+DEFAULTS.forEach(d => addBike(d));
+</script>
+</body>
+</html>
