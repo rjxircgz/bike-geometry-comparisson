@@ -329,106 +329,98 @@
 <script>
 const PRESETS = [
   // Trail
-  { category: 'Trail', name: 'Santa Cruz Hightower', year: 2024, size: 'L', hta: 65.5, sta: 76.5, reach: 480, stack: 624, topTube: 631, stemAngle: -6, stemLength: 50 },
-  { category: 'Trail', name: 'Ibis Ripmo V2',        year: 2024, size: 'L', hta: 65.5, sta: 77,   reach: 475, stack: 625, topTube: 625, stemAngle: -6, stemLength: 50 },
-  { category: 'Trail', name: 'Yeti SB140',           year: 2024, size: 'L', hta: 65.5, sta: 77.1, reach: 475, stack: 618, topTube: 622, stemAngle: -6, stemLength: 50 },
-  { category: 'Trail', name: 'Trek Fuel EX',         year: 2024, size: 'L', hta: 65.5, sta: 76,   reach: 470, stack: 621, topTube: 620, stemAngle: -6, stemLength: 50 },
-  // Enduro
-  { category: 'Enduro', name: 'Specialized Enduro',    year: 2024, size: 'S3', hta: 63.5, sta: 77.5, reach: 475, stack: 623, topTube: 625, stemAngle: -6, stemLength: 42 },
-  { category: 'Enduro', name: 'Santa Cruz Megatower',  year: 2024, size: 'L',  hta: 63.8, sta: 77,   reach: 480, stack: 627, topTube: 630, stemAngle: -6, stemLength: 42 },
-  { category: 'Enduro', name: 'Canyon Strive',         year: 2024, size: 'L',  hta: 64,   sta: 77,   reach: 470, stack: 625, topTube: 620, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Santa Cruz Hightower', year: 2024, size: 'L', hta: 65.5, sta: 76.5, reach: 480, stack: 624, topTube: 631, wheelbase: 1245, bbDrop: 31, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Ibis Ripmo V2',        year: 2024, size: 'L', hta: 65.5, sta: 77,   reach: 475, stack: 625, topTube: 625, wheelbase: 1238, bbDrop: 29, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Yeti SB140',           year: 2024, size: 'L', hta: 65.5, sta: 77.1, reach: 475, stack: 618, topTube: 622, wheelbase: 1246, bbDrop: 19, stemAngle: -6, stemLength: 50 },
+  { category: 'Trail', name: 'Trek Fuel EX',         year: 2024, size: 'L', hta: 65.5, sta: 76,   reach: 470, stack: 621, topTube: 620, wheelbase: 1250, bbDrop: 38, stemAngle: -6, stemLength: 50 },
   // XC
-  { category: 'XC', name: 'Scott Spark',             year: 2024, size: 'L',  hta: 68,   sta: 75,   reach: 460, stack: 610, topTube: 618, stemAngle: -6, stemLength: 75 },
-  { category: 'XC', name: 'Specialized Epic',        year: 2024, size: 'L',  hta: 67.5, sta: 75.2, reach: 450, stack: 605, topTube: 610, stemAngle: -6, stemLength: 80 },
-  { category: 'XC', name: 'Specialized Epic HT',     year: 2020, size: 'M',  hta: 68.5, sta: 74,   reach: 430, stack: 608, topTube: 604, stemAngle: 6,  stemLength: 70 },
-  { category: 'XC', name: 'Merida Big Nine 100',     year: 2021, size: 'L',  hta: 68,   sta: 71,   reach: 453, stack: 628, topTube: 682, stemAngle: -6, stemLength: 90 },
-  { category: 'XC', name: 'Canyon Lux',              year: 2024, size: 'L',  hta: 68,   sta: 74.5, reach: 455, stack: 608, topTube: 612, stemAngle: -6, stemLength: 75 },
+  { category: 'XC', name: 'Scott Spark',             year: 2024, size: 'L',  hta: 68,   sta: 75,   reach: 460, stack: 610, topTube: 618, wheelbase: 1226, bbDrop: 39, stemAngle: -6, stemLength: 75 },
+  { category: 'XC', name: 'Specialized Epic',        year: 2024, size: 'L',  hta: 67.5, sta: 75.2, reach: 450, stack: 605, topTube: 610, wheelbase: 1210, bbDrop: 39, stemAngle: -6, stemLength: 80 },
+  { category: 'XC', name: 'Specialized Epic HT',     year: 2020, size: 'M',  hta: 68.5, sta: 74,   reach: 430, stack: 608, topTube: 604, wheelbase: 1116, bbDrop: 52, stemAngle: 6,  stemLength: 70 },
+  { category: 'XC', name: 'Merida Big Nine 100',     year: 2021, size: 'L',  hta: 68,   sta: 71,   reach: 453, stack: 628, topTube: 682, wheelbase: 1110, bbDrop: 60, stemAngle: -6, stemLength: 90 },
+  { category: 'XC', name: 'Canyon Lux',              year: 2024, size: 'L',  hta: 68,   sta: 74.5, reach: 455, stack: 608, topTube: 612, wheelbase: 1167, bbDrop: 38, stemAngle: -6, stemLength: 75 },
   // Road
-  { category: 'Road', name: 'Specialized Tarmac',  year: 2024, size: '56', hta: 73.5, sta: 73.5, reach: 396, stack: 573, topTube: 565, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Canyon Aeroad',       year: 2024, size: 'M',  hta: 73.5, sta: 73.5, reach: 389, stack: 565, topTube: 560, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Trek Madone',         year: 2024, size: '56', hta: 73.2, sta: 73.7, reach: 391, stack: 570, topTube: 562, stemAngle: -6, stemLength: 110 },
-  // Gravel
-  { category: 'Gravel', name: 'Specialized Diverge', year: 2024, size: '56', hta: 72,   sta: 73,   reach: 390, stack: 590, topTube: 570, stemAngle: -6, stemLength: 90 },
-  { category: 'Gravel', name: 'Canyon Grail',        year: 2024, size: 'M',  hta: 72.5, sta: 73.5, reach: 385, stack: 585, topTube: 565, stemAngle: -6, stemLength: 90 },
-  { category: 'Gravel', name: 'Trek Checkpoint',     year: 2024, size: '56', hta: 71.5, sta: 73,   reach: 388, stack: 594, topTube: 568, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Specialized Tarmac',  year: 2024, size: '56', hta: 73.5, sta: 73.5, reach: 396, stack: 573, topTube: 565, wheelbase: 991,  bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Aeroad',       year: 2024, size: 'M',  hta: 73.5, sta: 73.5, reach: 389, stack: 565, topTube: 560, wheelbase: 988,  bbDrop: 70, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Trek Madone',         year: 2024, size: '56', hta: 73.2, sta: 73.7, reach: 391, stack: 570, topTube: 562, wheelbase: 980,  bbDrop: 70, stemAngle: -6, stemLength: 110 },
   // TdF — Specialized Tarmac SL8 (Soudal Quick-Step / Bora-hansgrohe)
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '44', hta: 70.5, sta: 75.5, reach: 363, stack: 509, topTube: 495, stemAngle: -6, stemLength: 70 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '49', hta: 71.75,sta: 75.5, reach: 372, stack: 522, topTube: 507, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '52', hta: 72.5, sta: 74,   reach: 377, stack: 535, topTube: 530, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '54', hta: 73,   sta: 74,   reach: 381, stack: 552, topTube: 539, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '56', hta: 73.5, sta: 73.5, reach: 393, stack: 573, topTube: 563, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '58', hta: 73.5, sta: 73.5, reach: 400, stack: 599, topTube: 577, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '61', hta: 74,   sta: 73,   reach: 406, stack: 620, topTube: 596, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '44', hta: 70.5, sta: 75.5, reach: 363, stack: 509, topTube: 495, wheelbase: 970,  bbDrop: 74, stemAngle: -6, stemLength: 70 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '49', hta: 71.75,sta: 75.5, reach: 372, stack: 522, topTube: 507, wheelbase: 973,  bbDrop: 74, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '52', hta: 72.5, sta: 74,   reach: 377, stack: 535, topTube: 530, wheelbase: 975,  bbDrop: 74, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '54', hta: 73,   sta: 74,   reach: 381, stack: 552, topTube: 539, wheelbase: 978,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '56', hta: 73.5, sta: 73.5, reach: 393, stack: 573, topTube: 563, wheelbase: 991,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '58', hta: 73.5, sta: 73.5, reach: 400, stack: 599, topTube: 577, wheelbase: 1006, bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '61', hta: 74,   sta: 73,   reach: 406, stack: 620, topTube: 596, wheelbase: 1013, bbDrop: 72, stemAngle: -6, stemLength: 110 },
   // TdF — Pinarello Dogma F (INEOS Grenadiers)
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '43',   hta: 69.5, sta: 74.4, reach: 351, stack: 502, topTube: 492, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '46.5', hta: 70.5, sta: 74.4, reach: 365, stack: 518, topTube: 510, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '50',   hta: 71.4, sta: 74,   reach: 372, stack: 525, topTube: 523, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '51.5', hta: 72,   sta: 73.7, reach: 378, stack: 532, topTube: 534, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '53',   hta: 72.5, sta: 73.7, reach: 383, stack: 543, topTube: 543, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '54',   hta: 72.8, sta: 73.4, reach: 385, stack: 551, topTube: 549, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '55',   hta: 72.8, sta: 73.4, reach: 389, stack: 562, topTube: 557, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '56',   hta: 73.2, sta: 73,   reach: 391, stack: 570, topTube: 565, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '57.5', hta: 73.7, sta: 73,   reach: 397, stack: 585, topTube: 576, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '59.5', hta: 73.4, sta: 72.4, reach: 393, stack: 613, topTube: 588, stemAngle: -6, stemLength: 120 },
-  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '62',   hta: 73.4, sta: 72,   reach: 410, stack: 652, topTube: 622, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '43',   hta: 69.5, sta: 74.4, reach: 351, stack: 502, topTube: 492, wheelbase: 965,  bbDrop: 67, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '46.5', hta: 70.5, sta: 74.4, reach: 365, stack: 518, topTube: 510, wheelbase: 974,  bbDrop: 72, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '50',   hta: 71.4, sta: 74,   reach: 372, stack: 525, topTube: 523, wheelbase: 975,  bbDrop: 72, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '51.5', hta: 72,   sta: 73.7, reach: 378, stack: 532, topTube: 534, wheelbase: 978,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '53',   hta: 72.5, sta: 73.7, reach: 383, stack: 543, topTube: 543, wheelbase: 984,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '54',   hta: 72.8, sta: 73.4, reach: 385, stack: 551, topTube: 549, wheelbase: 984,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '55',   hta: 72.8, sta: 73.4, reach: 389, stack: 562, topTube: 557, wheelbase: 992,  bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '56',   hta: 73.2, sta: 73,   reach: 391, stack: 570, topTube: 565, wheelbase: 993,  bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '57.5', hta: 73.7, sta: 73,   reach: 397, stack: 585, topTube: 576, wheelbase: 998,  bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '59.5', hta: 73.4, sta: 72.4, reach: 393, stack: 613, topTube: 588, wheelbase: 1009, bbDrop: 67, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '62',   hta: 73.4, sta: 72,   reach: 410, stack: 652, topTube: 622, wheelbase: 1039, bbDrop: 67, stemAngle: -6, stemLength: 120 },
   // TdF — Cervélo S5 (Visma-Lease a Bike — aero)
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '48', hta: 71,   sta: 73, reach: 367, stack: 496, topTube: 520, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '51', hta: 72,   sta: 73, reach: 376, stack: 519, topTube: 535, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '54', hta: 73,   sta: 73, reach: 384, stack: 542, topTube: 550, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '56', hta: 73.5, sta: 73, reach: 392, stack: 565, topTube: 565, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '58', hta: 73.5, sta: 73, reach: 401, stack: 588, topTube: 581, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '61', hta: 73.5, sta: 73, reach: 409, stack: 608, topTube: 595, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '48', hta: 71,   sta: 73, reach: 367, stack: 496, topTube: 520, wheelbase: 973,  bbDrop: 75, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '51', hta: 72,   sta: 73, reach: 376, stack: 519, topTube: 535, wheelbase: 974,  bbDrop: 75, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '54', hta: 73,   sta: 73, reach: 384, stack: 542, topTube: 550, wheelbase: 975,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '56', hta: 73.5, sta: 73, reach: 392, stack: 565, topTube: 565, wheelbase: 982,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '58', hta: 73.5, sta: 73, reach: 401, stack: 588, topTube: 581, wheelbase: 999,  bbDrop: 70, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '61', hta: 73.5, sta: 73, reach: 409, stack: 608, topTube: 595, wheelbase: 1013, bbDrop: 70, stemAngle: -6, stemLength: 120 },
   // TdF — Cervélo R5 (Visma-Lease a Bike — climbing)
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '48', hta: 71,   sta: 74, reach: 363, stack: 497, topTube: 515, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '51', hta: 72,   sta: 74, reach: 371, stack: 522, topTube: 531, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '54', hta: 73,   sta: 74, reach: 380, stack: 547, topTube: 548, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '56', hta: 73,   sta: 74, reach: 389, stack: 572, topTube: 564, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '58', hta: 73,   sta: 74, reach: 398, stack: 597, topTube: 581, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '61', hta: 73,   sta: 74, reach: 407, stack: 622, topTube: 598, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '48', hta: 71,   sta: 74, reach: 363, stack: 497, topTube: 515, wheelbase: 977,  bbDrop: 77, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '51', hta: 72,   sta: 74, reach: 371, stack: 522, topTube: 531, wheelbase: 978,  bbDrop: 77, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '54', hta: 73,   sta: 74, reach: 380, stack: 547, topTube: 548, wheelbase: 978,  bbDrop: 74, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '56', hta: 73,   sta: 74, reach: 389, stack: 572, topTube: 564, wheelbase: 993,  bbDrop: 74, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '58', hta: 73,   sta: 74, reach: 398, stack: 597, topTube: 581, wheelbase: 1010, bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '61', hta: 73,   sta: 74, reach: 407, stack: 622, topTube: 598, wheelbase: 1025, bbDrop: 72, stemAngle: -6, stemLength: 120 },
   // TdF — Canyon Ultimate CFR (Alpecin-Deceuninck / Movistar)
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XS', hta: 69.6,  sta: 73.9, reach: 372, stack: 498, topTube: 517, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XS',  hta: 71,    sta: 73.8, reach: 378, stack: 520, topTube: 530, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'S',   hta: 72.25, sta: 73.7, reach: 390, stack: 539, topTube: 548, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'M',   hta: 73.25, sta: 73.6, reach: 393, stack: 560, topTube: 558, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'L',   hta: 73.5,  sta: 73.5, reach: 401, stack: 580, topTube: 573, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XL',  hta: 73.75, sta: 73.4, reach: 419, stack: 606, topTube: 600, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XL', hta: 73.75, sta: 73.3, reach: 429, stack: 624, topTube: 616, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XS', hta: 69.6,  sta: 73.9, reach: 372, stack: 498, topTube: 517, wheelbase: 965,  bbDrop: 73, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XS',  hta: 71,    sta: 73.8, reach: 378, stack: 520, topTube: 530, wheelbase: 979,  bbDrop: 73, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'S',   hta: 72.25, sta: 73.7, reach: 390, stack: 539, topTube: 548, wheelbase: 982,  bbDrop: 73, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'M',   hta: 73.25, sta: 73.6, reach: 393, stack: 560, topTube: 558, wheelbase: 988,  bbDrop: 73, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'L',   hta: 73.5,  sta: 73.5, reach: 401, stack: 580, topTube: 573, wheelbase: 1003, bbDrop: 73, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XL',  hta: 73.75, sta: 73.4, reach: 419, stack: 606, topTube: 600, wheelbase: 1029, bbDrop: 73, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XL', hta: 73.75, sta: 73.3, reach: 429, stack: 624, topTube: 616, wheelbase: 1042, bbDrop: 73, stemAngle: -6, stemLength: 120 },
   // TdF — Colnago V4Rs (UAE Team Emirates — Pogačar)
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '42',   hta: 70.6, sta: 75.5, reach: 370, stack: 510, topTube: 504, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '45.5', hta: 71,   sta: 75,   reach: 375, stack: 522, topTube: 517, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '48.5', hta: 71.5, sta: 74.5, reach: 383, stack: 539, topTube: 535, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '51',   hta: 71.8, sta: 74,   reach: 388, stack: 557, topTube: 550, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '53',   hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '55',   hta: 72.9, sta: 73,   reach: 403, stack: 593, topTube: 586, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '57',   hta: 73.1, sta: 73,   reach: 410, stack: 612, topTube: 599, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '42',   hta: 70.6, sta: 75.5, reach: 370, stack: 510, topTube: 504, wheelbase: 973,  bbDrop: 72, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '45.5', hta: 71,   sta: 75,   reach: 375, stack: 522, topTube: 517, wheelbase: 979,  bbDrop: 72, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '48.5', hta: 71.5, sta: 74.5, reach: 383, stack: 539, topTube: 535, wheelbase: 988,  bbDrop: 72, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '51',   hta: 71.8, sta: 74,   reach: 388, stack: 557, topTube: 550, wheelbase: 994,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '53',   hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, wheelbase: 996,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '55',   hta: 72.9, sta: 73,   reach: 403, stack: 593, topTube: 586, wheelbase: 1005, bbDrop: 72, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '57',   hta: 73.1, sta: 73,   reach: 410, stack: 612, topTube: 599, wheelbase: 1016, bbDrop: 72, stemAngle: -6, stemLength: 110 },
   // TdF — Trek Madone Gen 8 (Lidl-Trek)
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XS', hta: 73.5, sta: 73.4, reach: 370, stack: 507, topTube: 521, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'S',  hta: 73.5, sta: 73.4, reach: 378, stack: 530, topTube: 536, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'M',  hta: 73.5, sta: 73.4, reach: 384, stack: 546, topTube: 547, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'ML', hta: 73.5, sta: 73.4, reach: 389, stack: 562, topTube: 557, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'L',  hta: 73.5, sta: 73.4, reach: 394, stack: 582, topTube: 568, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XL', hta: 73.5, sta: 73.4, reach: 402, stack: 610, topTube: 584, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XS', hta: 73.5, sta: 73.4, reach: 370, stack: 507, topTube: 521, wheelbase: 971,  bbDrop: 72, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'S',  hta: 73.5, sta: 73.4, reach: 378, stack: 530, topTube: 536, wheelbase: 976,  bbDrop: 72, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'M',  hta: 73.5, sta: 73.4, reach: 384, stack: 546, topTube: 547, wheelbase: 982,  bbDrop: 70, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'ML', hta: 73.5, sta: 73.4, reach: 389, stack: 562, topTube: 557, wheelbase: 980,  bbDrop: 70, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'L',  hta: 73.5, sta: 73.4, reach: 394, stack: 582, topTube: 568, wheelbase: 990,  bbDrop: 68, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XL', hta: 73.5, sta: 73.4, reach: 402, stack: 610, topTube: 584, wheelbase: 1006, bbDrop: 68, stemAngle: -6, stemLength: 110 },
   // TdF — BMC Teammachine R (AG2R Citroën)
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '47', hta: 71.5, sta: 74,   reach: 367, stack: 505, topTube: 515, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '51', hta: 71.5, sta: 74,   reach: 377, stack: 529, topTube: 532, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '54', hta: 72.3, sta: 73.5, reach: 386, stack: 549, topTube: 552, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '56', hta: 72.3, sta: 73.5, reach: 392, stack: 564, topTube: 562, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '58', hta: 72.3, sta: 73,   reach: 402, stack: 582, topTube: 582, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '61', hta: 72.3, sta: 73,   reach: 409, stack: 608, topTube: 598, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '47', hta: 71.5, sta: 74,   reach: 367, stack: 505, topTube: 515, wheelbase: 968,  bbDrop: 69, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '51', hta: 71.5, sta: 74,   reach: 377, stack: 529, topTube: 532, wheelbase: 986,  bbDrop: 69, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '54', hta: 72.3, sta: 73.5, reach: 386, stack: 549, topTube: 552, wheelbase: 989,  bbDrop: 69, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '56', hta: 72.3, sta: 73.5, reach: 392, stack: 564, topTube: 562, wheelbase: 999,  bbDrop: 69, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '58', hta: 72.3, sta: 73,   reach: 402, stack: 582, topTube: 582, wheelbase: 1015, bbDrop: 69, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '61', hta: 72.3, sta: 73,   reach: 409, stack: 608, topTube: 598, wheelbase: 1030, bbDrop: 69, stemAngle: -6, stemLength: 120 },
   // TdF — Cannondale SuperSix EVO (EF Education-EasyPost)
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '44', hta: 73, sta: 73.5, reach: 373, stack: 490, topTube: 518, stemAngle: -6, stemLength: 80 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '48', hta: 73, sta: 73.7, reach: 376, stack: 508, topTube: 525, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '50', hta: 73, sta: 73.8, reach: 379, stack: 520, topTube: 531, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '52', hta: 73, sta: 73.9, reach: 383, stack: 532, topTube: 538, stemAngle: -6, stemLength: 90 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '54', hta: 73, sta: 74,   reach: 387, stack: 545, topTube: 543, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '56', hta: 73, sta: 74,   reach: 393, stack: 565, topTube: 555, stemAngle: -6, stemLength: 100 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '58', hta: 73, sta: 74.1, reach: 398, stack: 585, topTube: 565, stemAngle: -6, stemLength: 110 },
-  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '61', hta: 73, sta: 74.2, reach: 406, stack: 615, topTube: 580, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '44', hta: 73, sta: 73.5, reach: 373, stack: 490, topTube: 518, wheelbase: 980,  bbDrop: 74, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '48', hta: 73, sta: 73.7, reach: 376, stack: 508, topTube: 525, wheelbase: 985,  bbDrop: 74, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '50', hta: 73, sta: 73.8, reach: 379, stack: 520, topTube: 531, wheelbase: 993,  bbDrop: 74, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '52', hta: 73, sta: 73.9, reach: 383, stack: 532, topTube: 538, wheelbase: 1002, bbDrop: 74, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '54', hta: 73, sta: 74,   reach: 387, stack: 545, topTube: 543, wheelbase: 1010, bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '56', hta: 73, sta: 74,   reach: 393, stack: 565, topTube: 555, wheelbase: 995,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '58', hta: 73, sta: 74.1, reach: 398, stack: 585, topTube: 565, wheelbase: 1007, bbDrop: 69, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '61', hta: 73, sta: 74.2, reach: 406, stack: 615, topTube: 580, wheelbase: 1024, bbDrop: 69, stemAngle: -6, stemLength: 110 },
 ];
 
 const DEFAULTS = [
-  { name: 'Colnago V4Rs (53)', color: '#e94560', hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
-  { name: 'Cervélo S5 (56)',   color: '#3498db', hta: 73.5, sta: 73,   reach: 392, stack: 565, topTube: 565, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+  { name: 'Colnago V4Rs (53)', color: '#e94560', hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, wheelbase: 996, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+  { name: 'Cervélo S5 (56)',   color: '#3498db', hta: 73.5, sta: 73,   reach: 392, stack: 565, topTube: 565, wheelbase: 982, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
 ];
 
 const PARAM_DEFS = [
@@ -436,7 +428,8 @@ const PARAM_DEFS = [
   { key: 'sta',              label: 'Seat Tube Angle',   unit: '°',  min: 65,  max: 80,  step: 0.1 },
   { key: 'reach',            label: 'Reach',             unit: 'mm', min: 350, max: 550, step: 1 },
   { key: 'stack',            label: 'Stack',             unit: 'mm', min: 500, max: 700, step: 1 },
-  { key: 'topTube',          label: 'Top Tube (ETT)',    unit: 'mm', min: 500, max: 700, step: 1 },
+  { key: 'wheelbase',        label: 'Wheelbase',         unit: 'mm', min: 900, max: 1350, step: 1 },
+  { key: 'bbDrop',           label: 'BB Drop',           unit: 'mm', min: 0,   max: 100,  step: 1 },
   { key: 'stemAngle',        label: 'Angle',              unit: '°',  min: -35, max: 35,  step: 1,  group: 'Stem' },
   { key: 'stemLength',       label: 'Length',             unit: 'mm', min: 30,  max: 150, step: 1,  group: 'Stem' },
   { key: 'stemSpacers',      label: 'Spacers',            unit: 'mm', min: 0,   max: 60,  step: 1,  group: 'Stem' },
@@ -451,7 +444,7 @@ function addBike(preset) {
   const d = preset || {
     name: 'Bike ' + (bikes.length + 1),
     color: ['#e94560','#3498db','#2ecc71','#f39c12'][bikes.length % 4],
-    hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20,
+    hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, wheelbase: 1170, bbDrop: 40, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20,
   };
   bikes.push({ id: nextId++, ...d });
   render();
@@ -698,19 +691,18 @@ function computeBikePoints(bike) {
   // Wheels — both axles at same height so both wheels sit flat on the ground
   const wheelRadius = 340; // ~700c wheel radius in mm at scale
 
-  // Front axle: derived from head tube bottom extending down fork length
-  const forkLength = 520;
-  const frontAxle = {
-    x: htBottom.x + forkLength * Math.cos(htaRad),
-    y: htBottom.y - forkLength * Math.sin(htaRad),
-  };
+  // BB drop: BB sits below axle centerline. In Y-up system, axles are above BB.
+  const bbDrop = bike.bbDrop || 70;
+  const axleY = bbDrop;
 
-  // Rear axle: same y as front axle (both wheels on the ground), x from chainstay
-  const chainstay = 430;
-  const rearAxle = {
-    x: bb.x - Math.sqrt(chainstay * chainstay - frontAxle.y * frontAxle.y),
-    y: frontAxle.y,
-  };
+  // Front axle: X from fork geometry, Y from BB drop
+  const forkLength = 520;
+  const frontAxleX = htBottom.x + forkLength * Math.cos(htaRad);
+  const frontAxle = { x: frontAxleX, y: axleY };
+
+  // Rear axle: wheelbase back from front axle, same Y
+  const wb = bike.wheelbase || 1000;
+  const rearAxle = { x: frontAxle.x - wb, y: axleY };
 
   // Top tube: slopes slightly down from head tube toward seat tube (compact frame)
   // Drop is proportional to ETT for a natural ~2° slope across bike types
@@ -859,7 +851,7 @@ function renderSVG() {
     circle(pts.bb, 8, color);
 
     // Seat tube
-    line(pts.bb, pts.stTop, 3);
+    line(pts.bb, pts.stTop, 5);
 
     // Seatpost
     line(pts.stTop, pts.seatpostTop, 2);
@@ -873,26 +865,16 @@ function renderSVG() {
     );
 
     // Head tube
-    line(pts.htTop, pts.htBottom, 4);
+    line(pts.htTop, pts.htBottom, 6);
 
     // Down tube (BB to head tube bottom)
     line(pts.bb, pts.htBottom, 3);
-
-    // Top tube (seat area to head tube top)
-    line(pts.ttSeatJoin, pts.htTop, 3);
 
     // Chainstay (BB to rear axle)
     line(pts.bb, pts.rearAxle, 2);
 
     // Fork (head tube bottom to front axle)
     line(pts.htBottom, pts.frontAxle, 2.5);
-
-    // Seatstay (seat tube top area to rear axle)
-    const seatstayTop = {
-      x: pts.bb.x - (380 * Math.cos(deg(bike.sta))),
-      y: pts.bb.y + (380 * Math.sin(deg(bike.sta))),
-    };
-    line(seatstayTop, pts.rearAxle, 2);
 
     // Steerer tube / spacers (htTop to stemOrigin)
     line(pts.htTop, pts.stemOrigin, 2);
@@ -912,11 +894,6 @@ function renderSVG() {
       y: pts.stemEnd.y - barHalf * Math.sin(stemPerp),
     };
     line(barEnd1, barEnd2, 3);
-
-    // Compute actual top tube length (for legend)
-    const ttDx = pts.ttSeatJoin.x - pts.htTop.x;
-    const ttDy = pts.ttSeatJoin.y - pts.htTop.y;
-    const ttActual = Math.round(Math.sqrt(ttDx * ttDx + ttDy * ttDy));
 
     // Measurement: saddle to handlebar (stem clamp)
     const dx = pts.saddle.x - pts.stemEnd.x;
