@@ -168,6 +168,20 @@
     text-align: center;
   }
 
+  .size-select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #0f3460;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    cursor: pointer;
+  }
+  .size-select:focus { outline: none; border-color: #e94560; }
+  .size-select option { background: #1a1a2e; color: #e0e0e0; }
+
   .params-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -337,11 +351,84 @@ const PRESETS = [
   { category: 'Gravel', name: 'Specialized Diverge', year: 2024, size: '56', hta: 72,   sta: 73,   reach: 390, stack: 590, topTube: 570, stemAngle: -6, stemLength: 90 },
   { category: 'Gravel', name: 'Canyon Grail',        year: 2024, size: 'M',  hta: 72.5, sta: 73.5, reach: 385, stack: 585, topTube: 565, stemAngle: -6, stemLength: 90 },
   { category: 'Gravel', name: 'Trek Checkpoint',     year: 2024, size: '56', hta: 71.5, sta: 73,   reach: 388, stack: 594, topTube: 568, stemAngle: -6, stemLength: 90 },
+  // TdF — Specialized Tarmac SL8 (Soudal Quick-Step / Bora-hansgrohe)
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '44', hta: 70.5, sta: 75.5, reach: 363, stack: 509, topTube: 495, stemAngle: -6, stemLength: 70 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '49', hta: 71.75,sta: 75.5, reach: 372, stack: 522, topTube: 507, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '52', hta: 72.5, sta: 74,   reach: 377, stack: 535, topTube: 530, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '54', hta: 73,   sta: 74,   reach: 381, stack: 552, topTube: 539, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '56', hta: 73.5, sta: 73.5, reach: 393, stack: 573, topTube: 563, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '58', hta: 73.5, sta: 73.5, reach: 400, stack: 599, topTube: 577, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Specialized Tarmac SL8', year: 2025, size: '61', hta: 74,   sta: 73,   reach: 406, stack: 620, topTube: 596, stemAngle: -6, stemLength: 110 },
+  // TdF — Pinarello Dogma F (INEOS Grenadiers)
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '43',   hta: 69.5, sta: 74.4, reach: 351, stack: 502, topTube: 492, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '46.5', hta: 70.5, sta: 74.4, reach: 365, stack: 518, topTube: 510, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '50',   hta: 71.4, sta: 74,   reach: 372, stack: 525, topTube: 523, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '51.5', hta: 72,   sta: 73.7, reach: 378, stack: 532, topTube: 534, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '53',   hta: 72.5, sta: 73.7, reach: 383, stack: 543, topTube: 543, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '54',   hta: 72.8, sta: 73.4, reach: 385, stack: 551, topTube: 549, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '55',   hta: 72.8, sta: 73.4, reach: 389, stack: 562, topTube: 557, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '56',   hta: 73.2, sta: 73,   reach: 391, stack: 570, topTube: 565, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '57.5', hta: 73.7, sta: 73,   reach: 397, stack: 585, topTube: 576, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '59.5', hta: 73.4, sta: 72.4, reach: 393, stack: 613, topTube: 588, stemAngle: -6, stemLength: 120 },
+  { category: 'Road', name: 'Pinarello Dogma F', year: 2025, size: '62',   hta: 73.4, sta: 72,   reach: 410, stack: 652, topTube: 622, stemAngle: -6, stemLength: 120 },
+  // TdF — Cervélo S5 (Visma-Lease a Bike — aero)
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '48', hta: 71,   sta: 73, reach: 367, stack: 496, topTube: 520, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '51', hta: 72,   sta: 73, reach: 376, stack: 519, topTube: 535, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '54', hta: 73,   sta: 73, reach: 384, stack: 542, topTube: 550, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '56', hta: 73.5, sta: 73, reach: 392, stack: 565, topTube: 565, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '58', hta: 73.5, sta: 73, reach: 401, stack: 588, topTube: 581, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cervélo S5', year: 2026, size: '61', hta: 73.5, sta: 73, reach: 409, stack: 608, topTube: 595, stemAngle: -6, stemLength: 120 },
+  // TdF — Cervélo R5 (Visma-Lease a Bike — climbing)
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '48', hta: 71,   sta: 74, reach: 363, stack: 497, topTube: 515, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '51', hta: 72,   sta: 74, reach: 371, stack: 522, topTube: 531, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '54', hta: 73,   sta: 74, reach: 380, stack: 547, topTube: 548, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '56', hta: 73,   sta: 74, reach: 389, stack: 572, topTube: 564, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '58', hta: 73,   sta: 74, reach: 398, stack: 597, topTube: 581, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cervélo R5', year: 2026, size: '61', hta: 73,   sta: 74, reach: 407, stack: 622, topTube: 598, stemAngle: -6, stemLength: 120 },
+  // TdF — Canyon Ultimate CFR (Alpecin-Deceuninck / Movistar)
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XS', hta: 69.6,  sta: 73.9, reach: 372, stack: 498, topTube: 517, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XS',  hta: 71,    sta: 73.8, reach: 378, stack: 520, topTube: 530, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'S',   hta: 72.25, sta: 73.7, reach: 390, stack: 539, topTube: 548, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'M',   hta: 73.25, sta: 73.6, reach: 393, stack: 560, topTube: 558, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'L',   hta: 73.5,  sta: 73.5, reach: 401, stack: 580, topTube: 573, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: 'XL',  hta: 73.75, sta: 73.4, reach: 419, stack: 606, topTube: 600, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Canyon Ultimate CFR', year: 2025, size: '2XL', hta: 73.75, sta: 73.3, reach: 429, stack: 624, topTube: 616, stemAngle: -6, stemLength: 120 },
+  // TdF — Colnago V4Rs (UAE Team Emirates — Pogačar)
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '42',   hta: 70.6, sta: 75.5, reach: 370, stack: 510, topTube: 504, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '45.5', hta: 71,   sta: 75,   reach: 375, stack: 522, topTube: 517, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '48.5', hta: 71.5, sta: 74.5, reach: 383, stack: 539, topTube: 535, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '51',   hta: 71.8, sta: 74,   reach: 388, stack: 557, topTube: 550, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '53',   hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '55',   hta: 72.9, sta: 73,   reach: 403, stack: 593, topTube: 586, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Colnago V4Rs', year: 2025, size: '57',   hta: 73.1, sta: 73,   reach: 410, stack: 612, topTube: 599, stemAngle: -6, stemLength: 110 },
+  // TdF — Trek Madone Gen 8 (Lidl-Trek)
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XS', hta: 73.5, sta: 73.4, reach: 370, stack: 507, topTube: 521, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'S',  hta: 73.5, sta: 73.4, reach: 378, stack: 530, topTube: 536, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'M',  hta: 73.5, sta: 73.4, reach: 384, stack: 546, topTube: 547, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'ML', hta: 73.5, sta: 73.4, reach: 389, stack: 562, topTube: 557, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'L',  hta: 73.5, sta: 73.4, reach: 394, stack: 582, topTube: 568, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Trek Madone Gen 8', year: 2025, size: 'XL', hta: 73.5, sta: 73.4, reach: 402, stack: 610, topTube: 584, stemAngle: -6, stemLength: 110 },
+  // TdF — BMC Teammachine R (AG2R Citroën)
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '47', hta: 71.5, sta: 74,   reach: 367, stack: 505, topTube: 515, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '51', hta: 71.5, sta: 74,   reach: 377, stack: 529, topTube: 532, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '54', hta: 72.3, sta: 73.5, reach: 386, stack: 549, topTube: 552, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '56', hta: 72.3, sta: 73.5, reach: 392, stack: 564, topTube: 562, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '58', hta: 72.3, sta: 73,   reach: 402, stack: 582, topTube: 582, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'BMC Teammachine R', year: 2025, size: '61', hta: 72.3, sta: 73,   reach: 409, stack: 608, topTube: 598, stemAngle: -6, stemLength: 120 },
+  // TdF — Cannondale SuperSix EVO (EF Education-EasyPost)
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '44', hta: 73, sta: 73.5, reach: 373, stack: 490, topTube: 518, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '48', hta: 73, sta: 73.7, reach: 376, stack: 508, topTube: 525, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '50', hta: 73, sta: 73.8, reach: 379, stack: 520, topTube: 531, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '52', hta: 73, sta: 73.9, reach: 383, stack: 532, topTube: 538, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '54', hta: 73, sta: 74,   reach: 387, stack: 545, topTube: 543, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '56', hta: 73, sta: 74,   reach: 393, stack: 565, topTube: 555, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '58', hta: 73, sta: 74.1, reach: 398, stack: 585, topTube: 565, stemAngle: -6, stemLength: 110 },
+  { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '61', hta: 73, sta: 74.2, reach: 406, stack: 615, topTube: 580, stemAngle: -6, stemLength: 110 },
 ];
 
 const DEFAULTS = [
-  { name: 'Trail Bike', color: '#e94560', hta: 65, sta: 76, reach: 475, stack: 625, topTube: 625, stemAngle: -6, stemLength: 50, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
-  { name: 'XC Bike',    color: '#3498db', hta: 69, sta: 73, reach: 440, stack: 600, topTube: 600, stemAngle: -6, stemLength: 90, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+  { name: 'Colnago V4Rs (53)', color: '#e94560', hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
+  { name: 'Cervélo S5 (56)',   color: '#3498db', hta: 73.5, sta: 73,   reach: 392, stack: 565, topTube: 565, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20 },
 ];
 
 const PARAM_DEFS = [
@@ -397,12 +484,16 @@ function renderCards() {
       <input type="text" value="${bike.name}" data-id="${bike.id}" data-field="name">
       <input type="color" value="${bike.color}" data-id="${bike.id}" data-field="color">
     </div>`;
-    // Searchable preset dropdown
+    // Searchable preset dropdown (model)
     html += `<div class="preset-search" data-id="${bike.id}">`;
     html += `<input type="text" class="preset-input" placeholder="Search presets\u2026" autocomplete="off">`;
     html += `<span class="chevron">\u25BC</span>`;
     html += `<div class="preset-dropdown"></div>`;
     html += `</div>`;
+    // Size selector (shown after model is picked)
+    html += `<select class="size-select" data-id="${bike.id}" style="display:none">`;
+    html += `<option value="" disabled selected>Select size\u2026</option>`;
+    html += `</select>`;
 
     // Ungrouped params in a 2-col grid
     const ungrouped = PARAM_DEFS.filter(p => !p.group);
@@ -435,29 +526,41 @@ function renderCards() {
     container.appendChild(card);
   });
 
+  // Build unique model list (deduplicated by name+year)
+  function getModels() {
+    const seen = new Set();
+    return PRESETS.filter(p => {
+      const key = p.name + '|' + p.year;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
   // Searchable preset dropdowns
   container.querySelectorAll('.preset-search').forEach(wrapper => {
     const input = wrapper.querySelector('.preset-input');
     const dropdown = wrapper.querySelector('.preset-dropdown');
     const bikeId = Number(wrapper.dataset.id);
+    const sizeSel = wrapper.parentElement.querySelector('.size-select[data-id="' + bikeId + '"]');
 
     function buildList(filter) {
       const q = (filter || '').toLowerCase();
-      const categories = [...new Set(PRESETS.map(p => p.category))];
+      const models = getModels();
+      const categories = [...new Set(models.map(p => p.category))];
       let html = '';
       let anyMatch = false;
       categories.forEach(cat => {
-        const items = PRESETS.map((p, i) => ({ ...p, idx: i }))
+        const items = models
           .filter(p => p.category === cat)
           .filter(p => !q || p.name.toLowerCase().includes(q)
             || p.category.toLowerCase().includes(q)
-            || String(p.year).includes(q)
-            || p.size.toLowerCase().includes(q));
+            || String(p.year).includes(q));
         if (items.length === 0) return;
         anyMatch = true;
         html += `<div class="cat-label">${cat}</div>`;
         items.forEach(p => {
-          html += `<div class="preset-option" data-idx="${p.idx}">${p.name} <span class="meta">${p.year} ${p.size}</span></div>`;
+          html += `<div class="preset-option" data-name="${p.name}" data-year="${p.year}">${p.name} <span class="meta">${p.year}</span></div>`;
         });
       });
       if (!anyMatch) html = '<div class="no-results">No bikes found</div>';
@@ -479,14 +582,40 @@ function renderCards() {
       wrapper.classList.add('open');
     });
 
+    // Step 1: pick model → populate size dropdown
     dropdown.addEventListener('mousedown', (e) => {
       const opt = e.target.closest('.preset-option');
       if (!opt) return;
       e.preventDefault();
-      const preset = PRESETS[Number(opt.dataset.idx)];
-      const bike = bikes.find(b => b.id === bikeId);
-      if (!bike) return;
-      bike.name = preset.name;
+      const modelName = opt.dataset.name;
+      const modelYear = Number(opt.dataset.year);
+      input.value = modelName + ' ' + modelYear;
+      wrapper.classList.remove('open');
+
+      // Find all sizes for this model
+      const sizes = PRESETS.filter(p => p.name === modelName && p.year === modelYear);
+      sizeSel.innerHTML = '<option value="" disabled selected>Select size\u2026</option>';
+      sizes.forEach((s, i) => {
+        const idx = PRESETS.indexOf(s);
+        sizeSel.innerHTML += `<option value="${idx}">${s.size}</option>`;
+      });
+      sizeSel.style.display = 'block';
+
+      // If only one size, auto-select it
+      if (sizes.length === 1) {
+        sizeSel.value = String(PRESETS.indexOf(sizes[0]));
+        sizeSel.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  // Step 2: pick size → load geometry
+  container.querySelectorAll('.size-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const preset = PRESETS[Number(sel.value)];
+      const bike = bikes.find(b => b.id === Number(sel.dataset.id));
+      if (!bike || !preset) return;
+      bike.name = preset.name + ' (' + preset.size + ')';
       PARAM_DEFS.forEach(p => { if (preset[p.key] != null) bike[p.key] = preset[p.key]; });
       render();
     });
@@ -566,27 +695,31 @@ function computeBikePoints(bike) {
     y: stemOrigin.y + bike.stemLength * Math.sin(stemRad),
   };
 
-  // Wheels — approximate positions
+  // Wheels — both axles at same height so both wheels sit flat on the ground
   const wheelRadius = 340; // ~700c wheel radius in mm at scale
 
-  // Rear wheel: directly below BB offset back (chainstay ~430mm)
-  const chainstay = 430;
-  const rearAxle = { x: bb.x - chainstay, y: bb.y };
-
-  // Front axle: derived from head tube bottom extending down to ground level.
-  // Fork length roughly gets the axle below the head tube bottom.
+  // Front axle: derived from head tube bottom extending down fork length
   const forkLength = 520;
   const frontAxle = {
     x: htBottom.x + forkLength * Math.cos(htaRad),
     y: htBottom.y - forkLength * Math.sin(htaRad),
   };
 
-  // Down tube: BB to head tube bottom
-  // Top tube: seat tube area to head tube top area
-  // We connect top tube from a point on the seat tube at roughly head tube top height
+  // Rear axle: same y as front axle (both wheels on the ground), x from chainstay
+  const chainstay = 430;
+  const rearAxle = {
+    x: bb.x - Math.sqrt(chainstay * chainstay - frontAxle.y * frontAxle.y),
+    y: frontAxle.y,
+  };
+
+  // Top tube: slopes slightly down from head tube toward seat tube (compact frame)
+  // Drop is proportional to ETT for a natural ~2° slope across bike types
+  const ett = bike.topTube || 600;
+  const ttDrop = ett * 0.035;
+  const ttSeatY = htTop.y - ttDrop;
   const ttSeatJoin = {
-    x: bb.x - ((htTop.y - 30) / Math.tan(staRad)),
-    y: htTop.y - 30,
+    x: bb.x - (ttSeatY / Math.tan(staRad)),
+    y: ttSeatY,
   };
 
   return { bb, htTop, htBottom, stTop, seatpostTop, saddle, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius };
@@ -780,6 +913,11 @@ function renderSVG() {
     };
     line(barEnd1, barEnd2, 3);
 
+    // Compute actual top tube length (for legend)
+    const ttDx = pts.ttSeatJoin.x - pts.htTop.x;
+    const ttDy = pts.ttSeatJoin.y - pts.htTop.y;
+    const ttActual = Math.round(Math.sqrt(ttDx * ttDx + ttDy * ttDy));
+
     // Measurement: saddle to handlebar (stem clamp)
     const dx = pts.saddle.x - pts.stemEnd.x;
     const dy = pts.saddle.y - pts.stemEnd.y;
@@ -791,7 +929,7 @@ function renderSVG() {
     // Legend
     const item = document.createElement('div');
     item.className = 'svg-legend-item';
-    item.innerHTML = `<div class="svg-legend-swatch" style="background:${bike.color}"></div><span>${bike.name}</span><span class="legend-measure">${dist}mm saddle–bar</span>`;
+    item.innerHTML = `<div class="svg-legend-swatch" style="background:${bike.color}"></div><span>${bike.name}</span><span class="legend-measure">Saddle–Bar: ${dist}mm</span>`;
     legend.appendChild(item);
   });
 }
