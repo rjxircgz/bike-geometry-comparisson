@@ -1,0 +1,7 @@
+services:
+  bike-geometry:
+    build: .
+    image: reindelttt/bike-geometry-comparison:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped
