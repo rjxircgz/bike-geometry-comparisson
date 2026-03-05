@@ -416,6 +416,19 @@ const PRESETS = [
   { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '56', hta: 73, sta: 74,   reach: 393, stack: 565, topTube: 555, wheelbase: 995,  bbDrop: 72, stemAngle: -6, stemLength: 100 },
   { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '58', hta: 73, sta: 74.1, reach: 398, stack: 585, topTube: 565, wheelbase: 1007, bbDrop: 69, stemAngle: -6, stemLength: 110 },
   { category: 'Road', name: 'Cannondale SuperSix EVO', year: 2026, size: '61', hta: 73, sta: 74.2, reach: 406, stack: 615, topTube: 580, wheelbase: 1024, bbDrop: 69, stemAngle: -6, stemLength: 110 },
+  // Argon 18 Nitrogen Disc (2019)
+  { category: 'Road', name: 'Argon 18 Nitrogen Disc', year: 2019, size: 'XS', hta: 72,   sta: 74.5, reach: 383, stack: 487, topTube: 519, wheelbase: 973,  bbDrop: 70, stemAngle: -6, stemLength: 80 },
+  { category: 'Road', name: 'Argon 18 Nitrogen Disc', year: 2019, size: 'S',  hta: 72.7, sta: 74,   reach: 390, stack: 516, topTube: 538, wheelbase: 983,  bbDrop: 70, stemAngle: -6, stemLength: 90 },
+  { category: 'Road', name: 'Argon 18 Nitrogen Disc', year: 2019, size: 'M',  hta: 72.7, sta: 73.5, reach: 394, stack: 546, topTube: 556, wheelbase: 996,  bbDrop: 70, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Argon 18 Nitrogen Disc', year: 2019, size: 'L',  hta: 72.7, sta: 73,   reach: 402, stack: 566, topTube: 575, wheelbase: 1013, bbDrop: 70, stemAngle: -6, stemLength: 100 },
+  { category: 'Road', name: 'Argon 18 Nitrogen Disc', year: 2019, size: 'XL', hta: 73,   sta: 72.5, reach: 409, stack: 592, topTube: 595, wheelbase: 1024, bbDrop: 70, stemAngle: -6, stemLength: 110 },
+  // Argon 18 Dark Matter (2025)
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'XXS', hta: 68.5, sta: 75.5, reach: 370, stack: 520, topTube: 507, wheelbase: 1030, bbDrop: 80, stemAngle: -6, stemLength: 70 },
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'XS',  hta: 70,   sta: 74.9, reach: 382, stack: 540, topTube: 530, wheelbase: 1036, bbDrop: 80, stemAngle: -6, stemLength: 80 },
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'S',   hta: 70.5, sta: 74.3, reach: 394, stack: 561, topTube: 553, wheelbase: 1045, bbDrop: 78, stemAngle: -6, stemLength: 90 },
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'M',   hta: 71,   sta: 73.7, reach: 406, stack: 582, topTube: 577, wheelbase: 1059, bbDrop: 78, stemAngle: -6, stemLength: 90 },
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'L',   hta: 71,   sta: 73.1, reach: 418, stack: 603, topTube: 602, wheelbase: 1080, bbDrop: 76, stemAngle: -6, stemLength: 100 },
+  { category: 'Gravel', name: 'Argon 18 Dark Matter', year: 2025, size: 'XL',  hta: 71,   sta: 72.5, reach: 430, stack: 629, topTube: 629, wheelbase: 1101, bbDrop: 76, stemAngle: -6, stemLength: 110 },
 ];
 
 const DEFAULTS = [
@@ -681,8 +694,11 @@ function computeBikePoints(bike) {
     y: htTop.y + spacers * Math.sin(htaRad),
   };
 
-  // Stem extends from stem origin.
-  const stemRad = deg(bike.stemAngle);
+  // Stem extends from stem origin, angled relative to the steerer tube.
+  // Perpendicular to steerer (forward) is at (90 - HTA)° from horizontal.
+  // Stem angle is measured from that perpendicular (negative = angled down).
+  const effectiveStemAngle = 90 - bike.hta + bike.stemAngle;
+  const stemRad = deg(effectiveStemAngle);
   const stemEnd = {
     x: stemOrigin.x + bike.stemLength * Math.cos(stemRad),
     y: stemOrigin.y + bike.stemLength * Math.sin(stemRad),
@@ -714,7 +730,7 @@ function computeBikePoints(bike) {
     y: ttSeatY,
   };
 
-  return { bb, htTop, htBottom, stTop, seatpostTop, saddle, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius };
+  return { bb, htTop, htBottom, stTop, seatpostTop, saddle, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius, effectiveStemAngle };
 }
 
 function renderSVG() {
@@ -884,7 +900,7 @@ function renderSVG() {
 
     // Handlebar — small T at end of stem
     const barHalf = 30;
-    const stemPerp = deg(bike.stemAngle + 90);
+    const stemPerp = deg(pts.effectiveStemAngle + 90);
     const barEnd1 = {
       x: pts.stemEnd.x + barHalf * Math.cos(stemPerp),
       y: pts.stemEnd.y + barHalf * Math.sin(stemPerp),
