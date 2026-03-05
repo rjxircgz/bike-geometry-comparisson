@@ -54,6 +54,37 @@
   }
   .bike-card .remove-btn:hover { color: #e74c3c; }
 
+  .diagram-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .diagram-header h2 { margin-bottom: 0; }
+
+  .visibility-toggles {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .vis-toggle {
+    padding: 4px 12px;
+    border: 2px solid var(--bike-color);
+    border-radius: 20px;
+    background: transparent;
+    color: #556;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vis-toggle.active {
+    background: var(--bike-color);
+    color: #fff;
+  }
+  .vis-toggle:hover { opacity: 0.8; }
+
   .bike-card label {
     display: block;
     font-size: 0.75rem;
@@ -303,6 +334,7 @@
   }
   #comparison-table tr:last-child td { border-bottom: none; }
 
+
   .cell-min { color: #3498db; font-weight: 700; }
   .cell-max { color: #e94560; font-weight: 700; }
   .delta-cell { color: #888; font-size: 0.8rem; }
@@ -316,7 +348,10 @@
 <button id="add-bike-btn">+ Add Bike</button>
 
 <div id="diagram-section">
-  <h2>Geometry Overlay</h2>
+  <div class="diagram-header">
+    <h2>Geometry Overlay</h2>
+    <div id="visibility-toggles" class="visibility-toggles"></div>
+  </div>
   <svg id="bike-svg" xmlns="http://www.w3.org/2000/svg"></svg>
   <div id="svg-legend" class="svg-legend"></div>
 </div>
@@ -459,7 +494,7 @@ function addBike(preset) {
     color: ['#e94560','#3498db','#2ecc71','#f39c12'][bikes.length % 4],
     hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, wheelbase: 1170, bbDrop: 40, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 300, seatpostSetback: 20,
   };
-  bikes.push({ id: nextId++, ...d });
+  bikes.push({ id: nextId++, visible: true, ...d });
   render();
 }
 
@@ -470,9 +505,26 @@ function removeBike(id) {
 
 function render() {
   renderCards();
+  renderToggles();
   renderSVG();
   renderTable();
   document.getElementById('add-bike-btn').disabled = bikes.length >= 4;
+}
+
+function renderToggles() {
+  const container = document.getElementById('visibility-toggles');
+  container.innerHTML = '';
+  bikes.forEach(bike => {
+    const btn = document.createElement('button');
+    btn.className = 'vis-toggle' + (bike.visible ? ' active' : '');
+    btn.style.setProperty('--bike-color', bike.color);
+    btn.textContent = bike.name;
+    btn.addEventListener('click', () => {
+      bike.visible = !bike.visible;
+      render();
+    });
+    container.appendChild(btn);
+  });
 }
 
 /* ── Cards ── */
@@ -739,13 +791,15 @@ function renderSVG() {
   svg.innerHTML = '';
   legend.innerHTML = '';
 
-  if (bikes.length === 0) {
+  // Compute all points to determine viewBox
+  const visibleBikes = bikes.filter(b => b.visible);
+
+  if (visibleBikes.length === 0) {
     svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#555" font-size="16">Add bikes to see the geometry overlay</text>';
     return;
   }
 
-  // Compute all points to determine viewBox
-  const allBikePoints = bikes.map(b => ({ bike: b, pts: computeBikePoints(b) }));
+  const allBikePoints = visibleBikes.map(b => ({ bike: b, pts: computeBikePoints(b) }));
 
   // Gather all x,y coords to calculate bounds
   let allX = [], allY = [];
@@ -792,6 +846,7 @@ function renderSVG() {
   svg.appendChild(gridGroup);
 
   // Draw each bike
+  const pendingTooltips = [];
   allBikePoints.forEach(({ bike, pts }) => {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('transform', 'scale(1,-1)');
@@ -817,8 +872,12 @@ function renderSVG() {
       const mx = (a.x + b.x) / 2 + (offset || 0);
       const my = -((a.y + b.y) / 2); // counter group scale(1,-1)
 
+      const tooltip = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      tooltip.classList.add('measure-tooltip');
+      tooltip.setAttribute('transform-origin', `${mx} ${my}`);
+
       // Background pill
-      const padX = 8, padY = 4, fontSize = 16;
+      const padX = 12, padY = 6, fontSize = 24;
       const estW = label.length * fontSize * 0.55;
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       rect.setAttribute('x', mx - estW / 2 - padX);
@@ -826,23 +885,25 @@ function renderSVG() {
       rect.setAttribute('width', estW + padX * 2);
       rect.setAttribute('height', fontSize + padY * 2);
       rect.setAttribute('rx', 6);
-      rect.setAttribute('fill', '#16213e');
+      rect.setAttribute('fill', '#0a0a1a');
+      rect.setAttribute('fill-opacity', '0.9');
       rect.setAttribute('stroke', color);
-      rect.setAttribute('stroke-width', 1);
-      rect.setAttribute('opacity', '0.95');
-      svg.appendChild(rect);
+      rect.setAttribute('stroke-width', 1.5);
+      tooltip.appendChild(rect);
 
       const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       txt.setAttribute('x', mx);
       txt.setAttribute('y', my);
       txt.setAttribute('text-anchor', 'middle');
       txt.setAttribute('dominant-baseline', 'central');
-      txt.setAttribute('fill', color);
+      txt.setAttribute('fill', '#fff');
       txt.setAttribute('font-size', fontSize);
-      txt.setAttribute('font-weight', '600');
+      txt.setAttribute('font-weight', '700');
       txt.setAttribute('font-family', 'inherit');
       txt.textContent = label;
-      svg.appendChild(txt);
+      tooltip.appendChild(txt);
+
+      pendingTooltips.push(tooltip);
     }
 
     function circle(c, r, fill) {
@@ -911,6 +972,17 @@ function renderSVG() {
     };
     line(barEnd1, barEnd2, 3);
 
+    // Measurement: wheelbase (dashed hub-to-hub line)
+    const wb = Math.round(Math.sqrt(
+      (pts.frontAxle.x - pts.rearAxle.x) ** 2 +
+      (pts.frontAxle.y - pts.rearAxle.y) ** 2
+    ));
+    measureLine(pts.rearAxle, pts.frontAxle, `WB: ${wb}mm`, 250);
+
+    // Measurement: BB drop (vertical from axle line down to BB)
+    const bbDropPt = { x: pts.bb.x, y: pts.rearAxle.y };
+    measureLine(bbDropPt, pts.bb, `BBd: ${bike.bbDrop}mm`, 30);
+
     // Measurement: saddle to handlebar (stem clamp)
     const dx = pts.saddle.x - pts.stemEnd.x;
     const dy = pts.saddle.y - pts.stemEnd.y;
@@ -925,25 +997,29 @@ function renderSVG() {
     item.innerHTML = `<div class="svg-legend-swatch" style="background:${bike.color}"></div><span>${bike.name}</span><span class="legend-measure">Saddle–Bar: ${dist}mm</span>`;
     legend.appendChild(item);
   });
+
+  // Append all tooltips last so they render on top of all bike lines
+  pendingTooltips.forEach(t => svg.appendChild(t));
 }
 
 /* ── Comparison Table ── */
 function renderTable() {
   const table = document.getElementById('comparison-table');
-  if (bikes.length === 0) {
+  const vb = bikes.filter(b => b.visible);
+  if (vb.length === 0) {
     table.innerHTML = '<tr><td style="color:#555;padding:20px;">Add bikes to see the comparison table</td></tr>';
     return;
   }
 
   let html = '<thead><tr><th>Parameter</th>';
-  bikes.forEach(b => {
+  vb.forEach(b => {
     html += `<th style="color:${b.color}">${b.name}</th>`;
   });
-  if (bikes.length === 2) html += '<th>Delta</th>';
+  if (vb.length === 2) html += '<th>Delta</th>';
   html += '</tr></thead><tbody>';
 
   PARAM_DEFS.forEach(p => {
-    const values = bikes.map(b => b[p.key]);
+    const values = vb.map(b => b[p.key]);
     const min = Math.min(...values);
     const max = Math.max(...values);
     const allSame = min === max;
@@ -951,13 +1027,13 @@ function renderTable() {
     html += `<tr><td>${p.label} (${p.unit})</td>`;
     values.forEach(v => {
       let cls = '';
-      if (!allSame && bikes.length > 1) {
+      if (!allSame && vb.length > 1) {
         if (v === min) cls = 'cell-min';
         else if (v === max) cls = 'cell-max';
       }
       html += `<td class="${cls}">${v}</td>`;
     });
-    if (bikes.length === 2) {
+    if (vb.length === 2) {
       const delta = values[1] - values[0];
       const sign = delta > 0 ? '+' : '';
       html += `<td class="delta-cell">${sign}${delta.toFixed(1)}</td>`;
