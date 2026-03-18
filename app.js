@@ -57,8 +57,8 @@ async function loadPresetsFromSupabase() {
 }
 
 const DEFAULTS = [
-  { name: 'Colnago V4Rs (53)', color: '#e94560', hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, wheelbase: 996, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275, saddleTilt: 0 },
-  { name: 'Cervélo S5 (56)',   color: '#3498db', hta: 73.5, sta: 73,   reach: 392, stack: 565, topTube: 565, wheelbase: 982, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275, saddleTilt: 0 },
+  { name: 'Colnago V4Rs (53)', color: '#e94560', hta: 72.5, sta: 73.5, reach: 395, stack: 575, topTube: 567, wheelbase: 996, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275, saddleTilt: 0, crankArm: 170 },
+  { name: 'Cervélo S5 (56)',   color: '#3498db', hta: 73.5, sta: 73,   reach: 392, stack: 565, topTube: 565, wheelbase: 982, bbDrop: 72, stemAngle: -6, stemLength: 100, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275, saddleTilt: 0, crankArm: 170 },
 ];
 
 const PARAM_DEFS = [
@@ -76,6 +76,7 @@ const PARAM_DEFS = [
   { key: 'saddleSetback',    label: 'Saddle Setback',     unit: 'mm', min: 0,   max: 50,  step: 1,  group: 'Seatpost' },
   { key: 'saddleLength',     label: 'Saddle Length',      unit: 'mm', min: 200, max: 320, step: 1,  group: 'Saddle' },
   { key: 'saddleTilt',       label: 'Saddle Tilt',        unit: '°',  min: -10, max: 10,  step: 0.5, group: 'Saddle' },
+  { key: 'crankArm',         label: 'Crank Arm Length',   unit: 'mm', min: 140, max: 185, step: 2.5, group: 'Drivetrain' },
 ];
 
 let bikes = [];
@@ -85,7 +86,7 @@ function addBike(preset) {
   const d = preset || {
     name: 'Bike ' + (bikes.length + 1),
     color: ['#e94560','#3498db','#2ecc71','#f39c12'][bikes.length % 4],
-    hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, wheelbase: 1170, bbDrop: 40, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275,
+    hta: 67, sta: 75, reach: 460, stack: 615, topTube: 610, wheelbase: 1170, bbDrop: 40, stemAngle: -6, stemLength: 60, stemSpacers: 10, seatpostHeight: 200, seatpostOffset: 20, saddleSetback: 0, saddleLength: 275, crankArm: 170,
   };
   bikes.push({ id: nextId++, visible: true, ...d });
   render();
@@ -390,7 +391,8 @@ function computeBikePoints(bike) {
     y: ttSeatY,
   };
 
-  return { bb, htTop, htBottom, stTop, seatpostTop, saddle, saddleNose, saddleTail, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius, effectiveStemAngle };
+  const crankArm = bike.crankArm || 170;
+  return { bb, htTop, htBottom, stTop, seatpostTop, saddle, saddleNose, saddleTail, stemOrigin, stemEnd, rearAxle, frontAxle, ttSeatJoin, wheelRadius, effectiveStemAngle, crankArm };
 }
 
 function renderSVG() {
@@ -419,6 +421,10 @@ function renderSVG() {
     allX.push(pts.frontAxle.x - pts.wheelRadius, pts.frontAxle.x + pts.wheelRadius);
     allY.push(pts.rearAxle.y - pts.wheelRadius, pts.rearAxle.y + pts.wheelRadius);
     allY.push(pts.frontAxle.y - pts.wheelRadius, pts.frontAxle.y + pts.wheelRadius);
+    // Crank arm circle edges
+    const crankR = pts.crankArm;
+    allX.push(pts.bb.x - crankR, pts.bb.x + crankR);
+    allY.push(pts.bb.y - crankR, pts.bb.y + crankR);
   });
 
   const minX = Math.min(...allX) - 60;
@@ -534,6 +540,10 @@ function renderSVG() {
     // BB dot
     circle(pts.bb, 8, color);
 
+    // Crank arm circle
+    const crankLen = bike.crankArm || 170;
+    circle(pts.bb, crankLen);
+
     // Seat tube
     line(pts.bb, pts.stTop, 5);
 
@@ -585,11 +595,21 @@ function renderSVG() {
     const bbDropPt = { x: pts.bb.x, y: pts.rearAxle.y };
     measureLine(bbDropPt, pts.bb, `BBd: ${bike.bbDrop}mm`, 30);
 
-    // Measurement: saddle height (BB center to saddle nose tip)
-    const shDx = pts.saddleNose.x - pts.bb.x;
-    const shDy = pts.saddleNose.y - pts.bb.y;
-    const saddleHeight = Math.round(Math.sqrt(shDx * shDx + shDy * shDy));
-    measureLine(pts.bb, pts.saddleNose, `SH: ${saddleHeight}mm`, -40);
+    // Measurement: crank arm length (BB to bottom of crank circle)
+    const crankBottom = { x: pts.bb.x, y: pts.bb.y - crankLen };
+    measureLine(pts.bb, crankBottom, `Crank: ${crankLen}mm`, 30);
+
+    // Measurement: saddle nose to crank arm circle
+    const snDx = pts.saddleNose.x - pts.bb.x;
+    const snDy = pts.saddleNose.y - pts.bb.y;
+    const noseToBB = Math.sqrt(snDx * snDx + snDy * snDy);
+    const noseToCrank = Math.round(noseToBB - crankLen);
+    // Point on crank circle closest to saddle nose
+    const crankNear = {
+      x: pts.bb.x + (snDx / noseToBB) * crankLen,
+      y: pts.bb.y + (snDy / noseToBB) * crankLen,
+    };
+    measureLine(pts.saddleNose, crankNear, `Nose–Pedal: ${noseToCrank}mm`, -40);
 
     // Measurement: saddle nose to handlebar (stem clamp)
     const dx = pts.saddleNose.x - pts.stemEnd.x;
